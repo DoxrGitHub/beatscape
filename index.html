@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beatscape</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./assets/favicon.png">
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap');
+        
+        /* Catppuccin Mocha Color Palette */
+        :root {
+            --base:     #1E1E2E;
+            --mantle:   #181825;
+            --crust:    #11111B;
+            --text:     #CDD6F4;
+            --subtext0: #A6ADC8;
+            --surface0: #313244;
+            --surface1: #45475A;
+            --blue:     #89B4FA;
+            --green:    #A6E3A1;
+            --lavender: #B4BEFE;
+            --title:    #94e2d5;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, var(--base) 0%, var(--mantle) 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .drum-pad {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background-color: var(--surface0);
+            border: 2px solid var(--surface1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .drum-pad:hover {
+            transform: translateY(-10px) scale(1.05);
+            background-color: var(--surface1);
+            border-color: var(--blue);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+            animation: glow 2s infinite alternate;
+        }
+
+        .drum-pad.active {
+            transform: scale(0.95);
+            background-color: rgba(137, 180, 250, 0.2);
+            border-color: var(--blue);
+        }
+
+        /* Glow Animations */
+        @keyframes glow {
+            0% {
+                box-shadow: 
+                    0 0 10px rgba(137, 180, 250, 0.4),
+                    0 10px 15px rgba(0,0,0,0.2);
+            }
+            100% {
+                box-shadow: 
+                    0 0 20px rgba(137, 180, 250, 0.6),
+                    0 10px 15px rgba(0,0,0,0.2);
+            }
+        }
+
+        .title-glow {
+            text-shadow: 
+                0 0 10px rgba(148, 226, 213, 0.4),
+                0 0 20px rgba(148, 226, 213, 0.2);
+            transition: text-shadow 0.3s ease;
+        }
+
+        .title-glow:hover {
+            text-shadow: 
+                0 0 15px rgba(148, 226, 213, 0.6),
+                0 0 25px rgba(148, 226, 213, 0.4);
+        }
+
+        .badge {
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 1%;
+            right: 1%;
+            animation: badge-pulse 2s infinite alternate;
+        }
+
+        @keyframes badge-pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+  <div class="badge">
+    <img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/logos/exports/1544x1544_circle.png" width="50">
+  </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-blue-400 tracking-tight mb-4 title-glow" style="color: var(--title)">
+                Beatscape
+            </h1>
+            <p class="text-subtext0 max-w-xl mx-auto" style="color: var(--subtext0)">
+                Create rhythms and beats using your keyboard. Press the highlighted keys to make sounds.
+            </p>
+        </header>
+
+        <div class="grid grid-cols-3 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div class="drum-pad group rounded-xl p-6 text-center" data-key="65" id="kick-pad">
+                <div class="text-5xl font-bold mb-2" style="color: var(--blue)">A</div>
+                <div class="font-semibold" style="color: var(--green)">Kick</div>
+            </div>
+
+            <div class="drum-pad group rounded-xl p-6 text-center" data-key="83" id="snare-pad">
+                <div class="text-5xl font-bold mb-2" style="color: var(--blue)">S</div>
+                <div class="font-semibold" style="color: var(--green)">Snare</div>
+            </div>
+
+            <div class="drum-pad group rounded-xl p-6 text-center" data-key="81" id="closedhat-pad">
+                <div class="text-5xl font-bold mb-2" style="color: var(--blue)">Q</div>
+                <div class="font-semibold" style="color: var(--green)">Closed Hat</div>
+            </div>
+
+            <div class="drum-pad group rounded-xl p-6 text-center" data-key="87" id="openhat-pad">
+                <div class="text-5xl font-bold mb-2" style="color: var(--blue)">W</div>
+                <div class="font-semibold" style="color: var(--green)">Open Hat</div>
+            </div>
+
+            <div class="drum-pad group rounded-xl p-6 text-center" data-key="68" id="tom1-pad">
+                <div class="text-5xl font-bold mb-2" style="color: var(--blue)">D</div>
+                <div class="font-semibold" style="color: var(--green)">Tom 1</div>
+            </div>
+
+            <div class="drum-pad group rounded-xl p-6 text-center" data-key="70" id="tom2-pad">
+                <div class="text-5xl font-bold mb-2" style="color: var(--blue)">F</div>
+                <div class="font-semibold" style="color: var(--green)">Tom 2</div>
+            </div>
+
+            <div class="drum-pad group rounded-xl p-6 text-center" data-key="69" id="cymbal-pad">
+                <div class="text-5xl font-bold mb-2" style="color: var(--blue)">E</div>
+                <div class="font-semibold" style="color: var(--green)">Cymbal</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+</body>
+</html>
